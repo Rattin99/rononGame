@@ -1,27 +1,74 @@
+
+
 kaboom({
     global: true,
-    fullscreen:true,
     scale:1,
     debug: true,
-    clearColor: [0,0,0,1]
+    clearColor: [0,0,0,1],
+    orientation: true,
 })
 
 loadSprite("pc","sprites/Cam.png")
 
-function spawnTree() {
-    add([
-        rect(48,rand(24,64)),
-        area(),
-        outline(4),
-        pos(width(),height() - 48),
-        origin("botleft"),
-        move(LEFT,240),
-        color(255,180,255),
-        "obs"
-    ])
-    wait(rand(1.5,2.5), () => {
-        spawnTree();
-    })
+function spawnObs(score, time) {
+
+    if(score < 100 && time % 300 === 0){
+        add([
+            rect(48,rand(24,64)),
+            area(),
+            outline(4),
+            pos(width(),height() - 48),
+            origin("botleft"),
+            move(LEFT,240),
+            color(255,180,255),
+            "obs",
+            cleanup()
+        ])
+    }
+
+    if(score < 300 && score > 100 && time % 200 === 0){
+        add([
+            rect(48,rand(24,64)),
+            area(),
+            outline(4),
+            pos(width(),height() - 48),
+            origin("botleft"),
+            move(LEFT,240),
+            color(255,180,255),
+            "obs",
+            cleanup()
+        ])
+    }
+
+    if(score < 500 && score > 300 && time % 100 === 0){
+         add([
+            rect(48,rand(24,64)),
+            area(),
+            outline(4),
+            pos(width(),height() - 48),
+            origin("botleft"),
+            move(LEFT,240),
+            color(255,180,255),
+            "obs",
+            cleanup()
+        ])
+    }
+
+    if(score > 500 && time % 50 === 0) {
+        add([
+            rect(48,rand(24,64)),
+            area(),
+            outline(4),
+            pos(width(),height() - 48),
+            origin("botleft"),
+            move(LEFT,240),
+            color(255,180,255),
+            "obs",
+            cleanup()
+        ])
+    }
+
+   
 }
 
 scene("game",()=> {
@@ -58,6 +105,7 @@ pc.onCollide("obs",() => {
 })
 
 let score = 0;
+let time = 0;
 const scoreLabel = add([
     text(score),
     pos(24,24)
@@ -65,11 +113,15 @@ const scoreLabel = add([
 
 onUpdate(()=>{
     score += 0.1;
-    scoreLabel.text = Math.floor(score);
+    time++;
+    const score_floor = Math.floor(score);
+    scoreLabel.text = score_floor;
+
+    spawnObs(score_floor,time)
 })
 
 
-spawnTree()
+
 })
 
 scene("lose",()=> {
